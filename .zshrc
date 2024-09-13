@@ -82,3 +82,9 @@ extract () {
     echo "'$1' is not a valid file"
   fi
 }
+
+autoload -Uz vcs_info
+precmd () { vcs_info }
+zstyle ':vcs_info:*' formats ' %s(%F{red}%b%f)'
+
+PS1='%n@%m %F{red}%/%f$vcs_info_msg_0_ $ '
