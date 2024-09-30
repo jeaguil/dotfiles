@@ -10,7 +10,7 @@ esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+# HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -124,4 +124,4 @@ HISTCONTROL=ignoredups
 
 . ~/.git-prompt.sh #https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
-PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='(\[\e[38;5;47m\]\t\[\e[0m\]) \[\e[38;5;202m\]\u@\[\e[38;5;33m\]\h\[\e[0m\]:\[\e[38;5;114m\]\w\[\e[38;5;160m\]${PS1_CMD1}\[\e[0m\] \n\[\e[38;5;46m\]_\[\e[38;5;47m\]\$\[\e[0m\] '
+PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\[\e[92m\]\u@\h:\[\e[38;5;33m\]\w\[\e[38;5;88m\]${PS1_CMD1}\[\e[0m\] \n\$ '
