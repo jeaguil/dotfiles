@@ -22,4 +22,15 @@ git config --global alias.pull-remote '!f() { \
   fi; \
 }; f'
 
+# git switch-prefix <prefix>
+# Finds and switches to a local branch that matches the specified prefix
+git config --global alias.switch-prefix '!f() { \
+  branch=$(git branch --list "$1*" | head -n 1 | sed "s/^[* ]*//"); \
+  if [ -z "$branch" ]; then \
+    echo "No branch found matching prefix $1"; \
+  else \
+    git switch "$branch"; \
+  fi; \
+}; f'
+
 ln -s ~/.dotfiles/.bashrc ~/
