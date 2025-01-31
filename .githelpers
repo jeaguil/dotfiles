@@ -9,6 +9,25 @@ SUBJECT="%s"
 FORMAT="$HASH $RELATIVE_TIME{$AUTHOR{$REFS $SUBJECT"
 
 pretty_git_log() {
-  git log --pretty="format:$FORMAT" $* |
+  git log --pretty="format:$FORMAT" "$*" |
   less -XRS --quit-if-one-screen
+}
+
+# Checks out a remote branch (if it exists) and creates a local branch tracking the remote branch
+pull_remote() {
+  if git rev-parse --quiet --verify "$1"; then
+    echo "Local branch $1 already exists.";
+  else \
+    git fetch origin "$1" && git checkout -b "$1" --track origin/"$1";
+  fi
+}
+
+# Finds and switches to a local branch that matches the specified prefix
+switch_prefix() {
+  branch=$(git branch --list "$1*" | head -n 1 | sed "s/^[* ]*//");
+  if [ -z "$branch" ]; then
+    echo "No branch found matching prefix $1";
+  else
+    git switch "$branch";
+  fi;
 }
