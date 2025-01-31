@@ -17,3 +17,4 @@ git config --global alias.pull-remote '!. ~/.dotfiles/.githelpers && pull_remote
 git config --global alias.switch-prefix '!. ~/.dotfiles/.githelpers && switch_prefix'
 
 ln -s ~/.dotfiles/.bashrc ~/
+ln -s ~/.dotfiles/.bash_aliases ~/
