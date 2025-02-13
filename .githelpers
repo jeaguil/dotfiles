@@ -17,7 +17,7 @@ pretty_git_log() {
 pull_remote() {
   if git rev-parse --quiet --verify "$1"; then
     echo "Local branch $1 already exists.";
-  else \
+  else
     git fetch origin "$1" && git checkout -b "$1" --track origin/"$1";
   fi
 }
@@ -30,4 +30,13 @@ switch_prefix() {
   else
     git switch "$branch";
   fi;
+}
+
+# Sets the upstream branch if remote branch exists
+set_upstream() {
+  if git rev-parse --quiet --verify "origin/$1"; then
+    git branch --set-upstream-to=origin/"$1" "$1";
+  else
+    echo "Remote branch origin/$1 does not exist.";
+  fi
 }

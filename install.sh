@@ -16,5 +16,7 @@ git config --global alias.pull-remote '!. ~/.dotfiles/.githelpers && pull_remote
 
 git config --global alias.switch-prefix '!. ~/.dotfiles/.githelpers && switch_prefix'
 
+git config --global alias.set-upstream '~. ~/.dotfiles/.githelpers && set_upstream'
+
 ln -s ~/.dotfiles/.bashrc ~/
 ln -s ~/.dotfiles/.bash_aliases ~/
