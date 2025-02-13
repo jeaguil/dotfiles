@@ -7,6 +7,12 @@ case $- in
       *) return;;
 esac
 
+# Check and install required packages if missing
+command -v lesspipe >/dev/null 2>&1 || { echo >&2 "Installing less..."; sudo apt-get install less; }
+command -v dircolors >/dev/null 2>&1 || { echo >&2 "Installing coreutils..."; sudo apt-get install coreutils; }
+command -v notify-send >/dev/null 2>&1 || { echo >&2 "Installing libnotify-bin..."; sudo apt-get install libnotify-bin; }
+[ -f /usr/share/bash-completion/bash_completion ] || [ -f /etc/bash_completion ] || { echo >&2 "Installing bash-completion..."; sudo apt-get install bash-completion; }
+
 # Append to the history file, don't overwrite it
 shopt -s histappend
 
@@ -88,8 +94,8 @@ fi
 export EDITOR="nano"
 HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
-. "$HOME/.cargo/env"
 
-. ~/.git-prompt.sh #https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+[ -f "$HOME/.git-prompt.sh" ] || { echo >&2 "Git prompt script not found. Downloading..."; curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh; }
+. ~/.git-prompt.sh # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
 PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\[\e[92m\]\u@\h:\[\e[38;5;33m\]\w\[\e[38;5;88m\]${PS1_CMD1}\[\e[0m\] \n\$ '
