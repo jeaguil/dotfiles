@@ -1,22 +1,17 @@
 #!/bin/bash
 
+cd $HOME
+
 git config --global user.name "Jesus Aguilera"
 git config --global user.email "jeaguil@github.com"
-
 git config --global core.editor vim
-
 git config --global pager.branch false
-
 git config --global push.default current
-
 git config --global alias.l '!. ~/.dotfiles/.githelpers && pretty_git_log'
 git config --global alias.la '!git l --all'
-
 git config --global alias.pull-remote '!. ~/.dotfiles/.githelpers && pull_remote'
-
 git config --global alias.switch-prefix '!. ~/.dotfiles/.githelpers && switch_prefix'
+git config --global alias.set-upstream '!. ~/.dotfiles/.githelpers && set_upstream'
 
-git config --global alias.set-upstream '~. ~/.dotfiles/.githelpers && set_upstream'
-
-ln -s ~/.dotfiles/.bashrc ~/
-ln -s ~/.dotfiles/.bash_aliases ~/
+ln -s $HOME/.dotfiles/.bashrc $HOME/.bashrc
+ln -s $HOME/.dotfiles/.bash_aliases $HOME/.bash_aliases
