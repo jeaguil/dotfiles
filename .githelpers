@@ -6,11 +6,21 @@ AUTHOR="%C(always,bold blue)%an%C(always,reset)"
 REFS="%C(always,red)%d%C(always,reset)"
 SUBJECT="%s"
 
+RESET="\033[0m"
+YELLOW="\033[33m"
+
 FORMAT="$HASH $RELATIVE_TIME{$AUTHOR{$REFS $SUBJECT"
 
 pretty_git_log() {
-  git log --pretty="format:$FORMAT" "$*" |
-  less -XRS --quit-if-one-screen
+  git log --graph --pretty="tformat:${FORMAT}" $* |
+      # Replace (2 years ago) with (2 years)
+      sed -Ee 's/(^[^<]*) ago\)/\1)/' |
+      # Replace (2 years, 5 months) with (2 years)
+      sed -Ee 's/(^[^<]*), [[:digit:]]+ .*months?\)/\1)/' |
+      # Color merge commits specially
+      sed -Ee "s/(Merge (branch|remote-tracking branch|pull request) .*$)/${YELLOW}\1${RESET}/" |
+      # Page only if we need to
+      less -FXRS
 }
 
 # Checks out a remote branch (if it exists) and creates a local branch tracking the remote branch

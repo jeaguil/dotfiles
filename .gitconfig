@@ -1,0 +1,25 @@
+[user]
+    name = Jesus Aguilera
+    email = jeaguil@github.com
+[github]
+    user = jeaguil
+[alias]
+    ll = !. ~/.dotfiles/.githelpers && pretty_git_log
+    la = !git ll --all
+    pull-remote = !. ~/.dotfiles/.githelpers && pull_remote
+    switch-prefix = !. ~/.dotfiles/.githelpers && switch_prefix
+    set-upstream = !. ~/.dotfiles/.githelpers && set_upstream
+[core]
+    pager = less -F -X
+    editor = vim
+[pager]
+    branch = false
+    diff = false
+    log = false
+[push]
+    default = current
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = true
