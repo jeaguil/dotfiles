@@ -31,9 +31,9 @@ setup_symlinks() {
   ln -sf "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
   echo -e "${GREEN}✓${NC} Created symlink for .gitconfig"
 
-  # Create OS-specific symlinks
   if [[ "$(uname)" == "Darwin" ]]; then
     ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+    ln -sf "$DOTFILES_DIR/.zshrc-utils" "$HOME/.zshrc-utils"
     echo -e "${GREEN}✓${NC} Created symlink for .zshrc"
   elif [[ "$(uname)" == "Linux" ]]; then
     ln -sf "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
@@ -42,40 +42,6 @@ setup_symlinks() {
 
   ln -sf "$DOTFILES_DIR/.profile" "$HOME/.profile"
   echo -e "${GREEN}✓${NC} Created symlink for .profile"
-}
-
-install_oh_my_zsh() {
-  print_header "Setting up Oh My Zsh"
-  
-  if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    echo "Installing Oh My Zsh..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    echo -e "${GREEN}✓${NC} Oh My Zsh installed"
-  else
-    echo -e "${GREEN}✓${NC} Oh My Zsh already installed"
-  fi
-}
-
-install_zsh_plugins() {
-  print_header "Installing ZSH plugins"
-  
-  # Install zsh-autosuggestions
-  if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
-    echo "Installing zsh-autosuggestions..."
-    git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-    echo -e "${GREEN}✓${NC} zsh-autosuggestions installed"
-  else
-    echo -e "${GREEN}✓${NC} zsh-autosuggestions already installed"
-  fi
-  
-  # Install zsh-syntax-highlighting
-  if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
-    echo "Installing zsh-syntax-highlighting..."
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
-    echo -e "${GREEN}✓${NC} zsh-syntax-highlighting installed"
-  else
-    echo -e "${GREEN}✓${NC} zsh-syntax-highlighting already installed"
-  fi
 }
 
 install_additional_tools() {
@@ -90,7 +56,6 @@ install_additional_tools() {
       echo -e "${GREEN}✓${NC} Homebrew already installed"
     fi
     
-    # Install common tools
     brew_packages=(
       git
       wget
@@ -110,7 +75,6 @@ install_additional_tools() {
   elif [[ "$(uname)" == "Linux" ]]; then
     sudo apt-get update
     
-    # Install common tools
     apt_packages=(
       git
       wget
@@ -139,6 +103,8 @@ setup_dotfiles_dir
 setup_symlinks
 
 if [[ "$(uname)" == "Darwin" ]]; then
+  # shellcheck disable=SC1091
+  source "$DOTFILES_DIR/.zshrc-utils"
   install_oh_my_zsh
   install_zsh_plugins
 fi
