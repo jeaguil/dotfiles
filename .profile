@@ -1,30 +1,31 @@
-# ~/.profile: executed by the command interpreter for login shells.
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
-# exists.
-# see /usr/share/doc/bash/examples/startup-files for examples.
-# the files are located in the bash-doc package.
+# ~/.profile: executed by login shells and sourced by .zshrc
+# Common environment variables and PATH modifications go here
 
-# the default umask is set in /etc/profile; for setting the umask
-# for ssh logins, install and configure the libpam-umask package.
-#umask 022
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-    fi
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+if command -v vim >/dev/null 2>&1; then
+  export EDITOR="vim"
+  export VISUAL="vim"
+elif command -v nano >/dev/null 2>&1; then
+  export EDITOR="nano"
+  export VISUAL="nano"
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+if [ "$(uname)" = "Darwin" ]; then
+  [ -d "/opt/homebrew/bin" ] && export PATH="/opt/homebrew/bin:$PATH"
+  [ -d "/usr/local/bin" ] && export PATH="/usr/local/bin:$PATH"
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+export LESS="-R"
+
+if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
 fi
 
-export GOPATH=$HOME/work
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+[ -f "$HOME/.profile.local" ] && source "$HOME/.profile.local"
+
+export PATH

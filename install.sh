@@ -39,6 +39,9 @@ setup_symlinks() {
     ln -sf "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
     echo -e "${GREEN}✓${NC} Created symlink for .bashrc"
   fi
+
+  ln -sf "$DOTFILES_DIR/.profile" "$HOME/.profile"
+  echo -e "${GREEN}✓${NC} Created symlink for .profile"
 }
 
 install_oh_my_zsh() {
