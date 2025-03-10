@@ -73,7 +73,19 @@ install_additional_tools() {
     done
     
   elif [[ "$(uname)" == "Linux" ]]; then
-    sudo apt-get update
+    echo "Checking if package manager is available..."
+    
+    if pgrep -f apt > /dev/null || pgrep -f dpkg > /dev/null; then
+      echo -e "${YELLOW}⚠️  Another package manager process is running.${NC}"
+      echo "The additional tools installation will be skipped."
+      echo "You can run the separate installation script later with:"
+      echo -e "${GREEN}bash ${DOTFILES_DIR}/install_packages.sh${NC}"
+      return 0
+    fi
+    
+    if ! sudo apt-get update; then
+      echo -e "${RED}✗${NC} Failed to update package lists. Continuing anyway..."
+    fi
     
     apt_packages=(
       git
@@ -84,8 +96,12 @@ install_additional_tools() {
     echo "Installing packages..."
     for package in "${apt_packages[@]}"; do
       if ! dpkg -s "$package" &>/dev/null; then
-        sudo apt-get install -y "$package"
-        echo -e "${GREEN}✓${NC} Installed $package"
+        echo "Installing $package..."
+        if ! sudo apt-get install -y "$package"; then
+          echo -e "${RED}✗${NC} Failed to install $package"
+        else
+          echo -e "${GREEN}✓${NC} Installed $package"
+        fi
       else
         echo -e "${GREEN}✓${NC} $package already installed"
       fi
@@ -111,6 +127,7 @@ fi
 
 install_additional_tools
 
+print_header "Verifying installation"
 if [ -f "$HOME/.gitconfig" ]; then
   echo -e "${GREEN}✓${NC} Verified .gitconfig is installed at $HOME/.gitconfig"
   ls -la "$HOME/.gitconfig"
