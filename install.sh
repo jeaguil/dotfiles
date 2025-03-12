@@ -60,6 +60,8 @@ install_additional_tools() {
       git
       wget
       vim
+      awscli
+      jq
     )
     
     echo "Installing packages with Homebrew..."
