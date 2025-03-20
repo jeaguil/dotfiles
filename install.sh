@@ -62,6 +62,9 @@ install_additional_tools() {
       vim
       awscli
       jq
+      minikube
+      docker
+      docker-compose
     )
     
     echo "Installing packages with Homebrew..."
