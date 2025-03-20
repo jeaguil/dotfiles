@@ -4,7 +4,7 @@
 [ -f "$HOME/.profile" ] && source "$HOME/.profile"
 
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
+ZSH_THEME="refined"
 
 HISTSIZE=10000
 HISTFILESIZE=10000
