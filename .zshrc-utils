@@ -15,15 +15,6 @@ install_oh_my_zsh() {
 install_zsh_plugins() {
   print_header "Installing ZSH plugins"
   
-  # Install zsh-autosuggestions
-  if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
-    echo "Installing zsh-autosuggestions..."
-    git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-    echo -e "${GREEN}✓${NC} zsh-autosuggestions installed"
-  else
-    echo -e "${GREEN}✓${NC} zsh-autosuggestions already installed"
-  fi
-  
   # Install zsh-syntax-highlighting
   if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
     echo "Installing zsh-syntax-highlighting..."
