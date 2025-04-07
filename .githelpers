@@ -44,9 +44,15 @@ switch_prefix() {
 
 # Sets the upstream branch if remote branch exists
 set_upstream() {
-  if git rev-parse --quiet --verify "origin/$1"; then
-    git branch --set-upstream-to=origin/"$1" "$1";
+  if [ -z "$1" ]; then
+    branch=$(git rev-parse --abbrev-ref HEAD)
   else
-    echo "Remote branch origin/$1 does not exist.";
+    branch="$1"
+  fi
+
+  if git rev-parse --quiet --verify "origin/$branch"; then
+    git branch --set-upstream-to=origin/"$branch" "$branch";
+  else
+    echo "Remote branch origin/$branch does not exist.";
   fi
 }
