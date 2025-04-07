@@ -65,6 +65,7 @@ install_additional_tools() {
       minikube
       docker
       docker-compose
+      gh
     )
     
     echo "Installing packages with Homebrew..."
