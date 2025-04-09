@@ -10,16 +10,12 @@ esac
 command -v dircolors >/dev/null 2>&1 || { echo >&2 "Installing coreutils..."; sudo apt-get install coreutils; }
 [ -f /usr/share/bash-completion/bash_completion ] || [ -f /etc/bash_completion ] || { echo >&2 "Installing bash-completion..."; sudo apt-get install bash-completion; }
 
-# Append to the history file, don't overwrite it
 shopt -s histappend
-
-# Set history length
 HISTSIZE=1000
 HISTFILESIZE=2000
 
 # Check the window size after each command
 shopt -s checkwinsize
-
 
 # Set variable identifying the chroot you work in
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
@@ -45,15 +41,6 @@ else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
 
 # Enable color support of ls and add handy aliases
 if [ -x /usr/bin/dircolors ]; then
