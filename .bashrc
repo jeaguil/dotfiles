@@ -7,10 +7,7 @@ case $- in
       *) return;;
 esac
 
-# Check and install required packages if missing
-command -v lesspipe >/dev/null 2>&1 || { echo >&2 "Installing less..."; sudo apt-get install less; }
 command -v dircolors >/dev/null 2>&1 || { echo >&2 "Installing coreutils..."; sudo apt-get install coreutils; }
-command -v notify-send >/dev/null 2>&1 || { echo >&2 "Installing libnotify-bin..."; sudo apt-get install libnotify-bin; }
 [ -f /usr/share/bash-completion/bash_completion ] || [ -f /etc/bash_completion ] || { echo >&2 "Installing bash-completion..."; sudo apt-get install bash-completion; }
 
 # Append to the history file, don't overwrite it
@@ -23,8 +20,6 @@ HISTFILESIZE=2000
 # Check the window size after each command
 shopt -s checkwinsize
 
-# Make less more friendly for non-text input files
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # Set variable identifying the chroot you work in
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
@@ -69,15 +64,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# Some more ls aliases
 alias ll='ls -alFh'
 alias la='ls -A'
 alias l='ls -CF'
-
-# Add an "alert" alias for long running commands
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Source ~/.bash_aliases if it exists
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -91,7 +80,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export EDITOR="nano"
+export EDITOR="vim"
 HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
 
