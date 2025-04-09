@@ -9,6 +9,7 @@
     pull-remote = !. ~/.dotfiles/.githelpers && pull_remote
     switch-prefix = !. ~/.dotfiles/.githelpers && switch_prefix
     set-upstream = !. ~/.dotfiles/.githelpers && set_upstream
+    clb = !. ~/.dotfiles/.githelpers && clean_local_branches
 [core]
     pager = less -F -X
     editor = vim

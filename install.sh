@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Get the absolute path of the dotfiles directory
 DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 GREEN='\033[0;32m'
@@ -10,18 +9,6 @@ NC='\033[0m'
 
 print_header() {
   echo -e "\n${YELLOW}==== $1 ====${NC}"
-}
-
-setup_dotfiles_dir() {
-  print_header "Setting up dotfiles directory"
-  
-  # Create symbolic link from the actual repository location to ~/.dotfiles
-  if [ ! -L "$HOME/.dotfiles" ]; then
-    ln -sf "$DOTFILES_DIR" "$HOME/.dotfiles"
-    echo -e "${GREEN}✓${NC} Created symlink from $DOTFILES_DIR to ~/.dotfiles"
-  else
-    echo -e "${GREEN}✓${NC} ~/.dotfiles symlink already exists"
-  fi
 }
 
 setup_symlinks() {
@@ -119,8 +106,6 @@ print_header "Starting dotfiles installation"
 cd ~ || exit
 
 mkdir -p ~/.config
-
-setup_dotfiles_dir
 
 setup_symlinks
 
