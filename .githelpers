@@ -8,17 +8,12 @@ SUBJECT="%s"
 
 RESET="\033[0m"
 YELLOW="\033[33m"
+CYAN="\033[36m"
 
-FORMAT="$HASH $RELATIVE_TIME{$AUTHOR{$REFS $SUBJECT"
+FORMAT="$HASH $RELATIVE_TIME $REFS $SUBJECT"
 
 pretty_git_log() {
-  git log --graph --pretty="tformat:${FORMAT}" $* |
-      # Replace (2 years ago) with (2 years)
-      sed -Ee 's/(^[^<]*) ago\)/\1)/' |
-      # Replace (2 years, 5 months) with (2 years)
-      sed -Ee 's/(^[^<]*), [[:digit:]]+ .*months?\)/\1)/' |
-      # Color merge commits specially
-      sed -Ee "s/(Merge (branch|remote-tracking branch|pull request) .*$)/${YELLOW}\1${RESET}/" |
+  git log --pretty="tformat:${FORMAT}" |
       # Page only if we need to
       less -FXRS
 }
@@ -66,4 +61,30 @@ clean_local_branches() {
       git branch -D "$branch"
     fi
   done
+}
+
+color_verbose_branch() {
+  git branch -vv | awk -v yellow="$YELLOW" -v cyan="$CYAN" -v normal="$RESET" '
+  {
+    if ($1 == "*") {
+      printf "%s %s%s%s %s", $1, yellow, $2, normal, $3
+      if (match($4, /^\[/)) {
+        printf " %s%s%s", cyan, $4, normal
+        for (i=5; i<=NF; i++) printf " %s", $i
+      } else {
+        for (i=4; i<=NF; i++) printf " %s", $i
+      }
+      print ""
+    } else {
+      printf "  %s%s%s %s", yellow, $1, normal, $2
+      if (match($3, /^\[/)) {
+        printf " %s%s%s", cyan, $3, normal
+        for (i=4; i<=NF; i++) printf " %s", $i
+      } else {
+        for (i=3; i<=NF; i++) printf " %s", $i
+      }
+      print ""
+    }
+  }
+  '
 }

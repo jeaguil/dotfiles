@@ -10,6 +10,7 @@
     switch-prefix = !. ~/.dotfiles/.githelpers && switch_prefix
     set-upstream = !. ~/.dotfiles/.githelpers && set_upstream
     clb = !. ~/.dotfiles/.githelpers && clean_local_branches
+    bvv = !. ~/.dotfiles/.githelpers && color_verbose_branch
 [core]
     pager = less -F -X
     editor = vim
