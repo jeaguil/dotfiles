@@ -20,7 +20,6 @@ setup_symlinks() {
 
   if [[ "$(uname)" == "Darwin" ]]; then
     ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-    ln -sf "$DOTFILES_DIR/.zshrc-utils" "$HOME/.zshrc-utils"
     echo -e "${GREEN}✓${NC} Created symlink for .zshrc"
   elif [[ "$(uname)" == "Linux" ]]; then
     ln -sf "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
@@ -29,77 +28,6 @@ setup_symlinks() {
 
   ln -sf "$DOTFILES_DIR/.profile" "$HOME/.profile"
   echo -e "${GREEN}✓${NC} Created symlink for .profile"
-}
-
-install_additional_tools() {
-  print_header "Installing additional tools"
-  
-  if [[ "$(uname)" == "Darwin" ]]; then
-    if ! command -v brew >/dev/null 2>&1; then
-      echo "Installing Homebrew..."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      echo -e "${GREEN}✓${NC} Homebrew installed"
-    else
-      echo -e "${GREEN}✓${NC} Homebrew already installed"
-    fi
-    
-    brew_packages=(
-      git
-      wget
-      vim
-      awscli
-      jq
-      minikube
-      docker
-      docker-compose
-      gh
-    )
-    
-    echo "Installing packages with Homebrew..."
-    for package in "${brew_packages[@]}"; do
-      if ! brew list "$package" &>/dev/null; then
-        brew install "$package"
-        echo -e "${GREEN}✓${NC} Installed $package"
-      else
-        echo -e "${GREEN}✓${NC} $package already installed"
-      fi
-    done
-    
-  elif [[ "$(uname)" == "Linux" ]]; then
-    echo "Checking if package manager is available..."
-    
-    if pgrep -f apt > /dev/null || pgrep -f dpkg > /dev/null; then
-      echo -e "${YELLOW}⚠️  Another package manager process is running.${NC}"
-      echo "The additional tools installation will be skipped."
-      echo "You can run the separate installation script later with:"
-      echo -e "${GREEN}bash ${DOTFILES_DIR}/install_packages.sh${NC}"
-      return 0
-    fi
-    
-    if ! sudo apt-get update; then
-      echo -e "${RED}✗${NC} Failed to update package lists. Continuing anyway..."
-    fi
-    
-    apt_packages=(
-      git
-      wget
-      vim
-    )
-    
-    echo "Installing packages..."
-    for package in "${apt_packages[@]}"; do
-      if ! dpkg -s "$package" &>/dev/null; then
-        echo "Installing $package..."
-        if ! sudo apt-get install -y "$package"; then
-          echo -e "${RED}✗${NC} Failed to install $package"
-        else
-          echo -e "${GREEN}✓${NC} Installed $package"
-        fi
-      else
-        echo -e "${GREEN}✓${NC} $package already installed"
-      fi
-    done
-  fi
 }
 
 print_header "Starting dotfiles installation"
@@ -111,12 +39,27 @@ setup_symlinks
 
 if [[ "$(uname)" == "Darwin" ]]; then
   # shellcheck disable=SC1091
-  source "$DOTFILES_DIR/.zshrc-utils"
-  install_oh_my_zsh
-  install_zsh_plugins
-fi
+  print_header "Setting up Oh My Zsh"
 
-install_additional_tools
+  if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo "Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    echo -e "${GREEN}✓${NC} Oh My Zsh installed"
+  else
+    echo -e "${GREEN}✓${NC} Oh My Zsh already installed"
+  fi
+
+  print_header "Installing ZSH plugins"
+
+  # Install zsh-syntax-highlighting
+  if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
+    echo "Installing zsh-syntax-highlighting..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
+    echo -e "${GREEN}✓${NC} zsh-syntax-highlighting installed"
+  else
+    echo -e "${GREEN}✓${NC} zsh-syntax-highlighting already installed"
+  fi
+fi
 
 print_header "Verifying installation"
 if [ -f "$HOME/.gitconfig" ]; then

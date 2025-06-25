@@ -15,18 +15,6 @@ setopt HIST_IGNORE_SPACE     # Don't record commands starting with space
 setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries
 setopt SHARE_HISTORY         # Share history between terminals
 
-# Oh My Zsh plugins
-plugins=(
-  git
-  macos
-  brew
-  docker
-  docker-compose
-  vscode
-  z
-  zsh-syntax-highlighting
-)
-
 source $ZSH/oh-my-zsh.sh
 
 export EDITOR='vim'

@@ -2,7 +2,6 @@
 
 HASH="%C(always,yellow)%h%C(always,reset)"
 RELATIVE_TIME="%C(always,green)%ar%C(always,reset)"
-AUTHOR="%C(always,bold blue)%an%C(always,reset)"
 REFS="%C(always,red)%d%C(always,reset)"
 SUBJECT="%s"
 
@@ -13,13 +12,17 @@ CYAN="\033[36m"
 FORMAT="$HASH $RELATIVE_TIME $REFS $SUBJECT"
 
 pretty_git_log() {
-  git log --pretty="tformat:${FORMAT}" |
-      # Page only if we need to
+  git log --pretty="tformat:${FORMAT}" "$@" |
       less -FXRS
 }
 
-# Checks out a remote branch (if it exists) and creates a local branch tracking the remote branch
 pull_remote() {
+  if [ -z "$1" ]; then
+    echo "Usage: git p-re <branch_name>"
+    echo "  Fetches and checks out a remote branch, creating a local tracking branch"
+    return 1
+  fi
+
   if git rev-parse --quiet --verify "$1"; then
     echo "Local branch $1 already exists.";
   else
@@ -27,8 +30,13 @@ pull_remote() {
   fi
 }
 
-# Finds and switches to a local branch that matches the specified prefix
 switch_prefix() {
+  if [ -z "$1" ]; then
+    echo "Usage: git s-pr <prefix>"
+    echo "  Switches to the first branch that matches the given prefix"
+    return 1
+  fi
+
   branch=$(git branch --list "$1*" | head -n 1 | sed "s/^[* ]*//");
   if [ -z "$branch" ]; then
     echo "No branch found matching prefix $1";
@@ -37,7 +45,6 @@ switch_prefix() {
   fi;
 }
 
-# Sets the upstream branch if remote branch exists
 set_upstream() {
   if [ -z "$1" ]; then
     branch=$(git rev-parse --abbrev-ref HEAD)

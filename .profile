@@ -1,3 +1,4 @@
+#!/bin/bash
 # ~/.profile: executed by login shells and sourced by .zshrc
 # Common environment variables and PATH modifications go here
 

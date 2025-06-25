@@ -6,9 +6,9 @@
 [alias]
     ll = !. ~/.dotfiles/.githelpers && pretty_git_log
     la = !git ll --all
-    pull-remote = !. ~/.dotfiles/.githelpers && pull_remote
-    switch-prefix = !. ~/.dotfiles/.githelpers && switch_prefix
-    set-upstream = !. ~/.dotfiles/.githelpers && set_upstream
+    p-re = !. ~/.dotfiles/.githelpers && pull_remote
+    s-pr = !. ~/.dotfiles/.githelpers && switch_prefix
+    su = !. ~/.dotfiles/.githelpers && set_upstream
     clb = !. ~/.dotfiles/.githelpers && clean_local_branches
     bvv = !. ~/.dotfiles/.githelpers && color_verbose_branch
 [core]

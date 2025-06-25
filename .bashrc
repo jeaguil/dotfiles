@@ -74,4 +74,4 @@ HISTCONTROL=ignoredups
 [ -f "$HOME/.git-prompt.sh" ] || { echo >&2 "Git prompt script not found. Downloading..."; curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh; }
 . ~/.git-prompt.sh # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
-PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\[\e[92m\]\u@\h:\[\e[38;5;33m\]\w\[\e[38;5;88m\]${PS1_CMD1}\[\e[0m\] \n\$ '
+PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\u@\h:\w${PS1_CMD1} \n\$ '
