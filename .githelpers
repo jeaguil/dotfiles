@@ -8,6 +8,7 @@ SUBJECT="%s"
 RESET="\033[0m"
 YELLOW="\033[33m"
 CYAN="\033[36m"
+GREEN="\033[32m"
 
 FORMAT="$HASH $RELATIVE_TIME $REFS $SUBJECT"
 
@@ -71,10 +72,10 @@ clean_local_branches() {
 }
 
 color_verbose_branch() {
-  git branch -vv | awk -v yellow="$YELLOW" -v cyan="$CYAN" -v normal="$RESET" '
+  git branch -vv | awk -v yellow="$YELLOW" -v cyan="$CYAN" -v green="$GREEN" -v normal="$RESET" '
   {
     if ($1 == "*") {
-      printf "%s %s%s%s %s", $1, yellow, $2, normal, $3
+      printf "%s %s%s%s %s", $1, green, $2, normal, $3
       if (match($4, /^\[/)) {
         printf " %s%s%s", cyan, $4, normal
         for (i=5; i<=NF; i++) printf " %s", $i
