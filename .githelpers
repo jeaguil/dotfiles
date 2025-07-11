@@ -40,7 +40,8 @@ switch_prefix() {
 
   branch=$(git branch --list "$1*" | head -n 1 | sed "s/^[* ]*//");
   if [ -z "$branch" ]; then
-    echo "No branch found matching prefix $1";
+    echo "No local branch found matching prefix $1, trying to pull remote branch...";
+    pull_remote "$1"
   else
     git switch "$branch";
   fi;
