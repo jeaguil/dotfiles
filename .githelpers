@@ -6,7 +6,7 @@ REFS="%C(always,red)%d%C(always,reset)"
 SUBJECT="%s"
 
 RESET="\033[0m"
-YELLOW="\033[33m"
+PURPLE="\033[38;2;75;69;126m"
 CYAN="\033[36m"
 GREEN="\033[32m"
 
@@ -73,7 +73,7 @@ clean_local_branches() {
 }
 
 color_verbose_branch() {
-  git branch -vv | awk -v yellow="$YELLOW" -v cyan="$CYAN" -v green="$GREEN" -v normal="$RESET" '
+  git branch -vv | awk -v purple="$PURPLE" -v cyan="$CYAN" -v green="$GREEN" -v normal="$RESET" '
   {
     if ($1 == "*") {
       printf "%s %s%s%s %s", $1, green, $2, normal, $3
@@ -85,7 +85,7 @@ color_verbose_branch() {
       }
       print ""
     } else {
-      printf "  %s%s%s %s", yellow, $1, normal, $2
+      printf "  %s%s%s %s", purple, $1, normal, $2
       if (match($3, /^\[/)) {
         printf " %s%s%s", cyan, $3, normal
         for (i=4; i<=NF; i++) printf " %s", $i
