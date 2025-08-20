@@ -64,7 +64,7 @@ set_upstream() {
 clean_local_branches() {
   git fetch --prune
   current_branch=$(git rev-parse --abbrev-ref HEAD)
-  for branch in $(git branch --format='%(refname:short) %(upstream:track)' | awk '$2 == "[gone]" {print $1}')
+  for branch in $(git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads | awk '$2 == "" { print $1 }')
   do
     if [ "$branch" != "master" ] && [ "$branch" != "main" ] && [ "$branch" != "$current_branch" ]; then
       git branch -D "$branch"
