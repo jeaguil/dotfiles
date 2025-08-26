@@ -18,7 +18,7 @@ setup_symlinks() {
   ln -sf "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
   echo -e "${GREEN}✓${NC} Created symlink for .gitconfig"
 
-  if [[ "$(uname)" == "Darwin" ]]; then
+  if [[ -n "$CODESPACES" && -f "/bin/zsh" ]] || [[ "$(uname)" == "Darwin" ]]; then
     ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
     echo -e "${GREEN}✓${NC} Created symlink for .zshrc"
   elif [[ "$(uname)" == "Linux" ]]; then
@@ -31,14 +31,10 @@ setup_symlinks() {
 }
 
 print_header "Starting dotfiles installation"
-cd ~ || exit
-
-mkdir -p ~/.config
 
 setup_symlinks
 
-if [[ "$(uname)" == "Darwin" ]]; then
-  # shellcheck disable=SC1091
+if [[ -n "$CODESPACES" && -f "/bin/zsh" ]] || [[ "$(uname)" == "Darwin" ]]; then
   print_header "Setting up Oh My Zsh"
 
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -51,7 +47,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
 
   print_header "Installing ZSH plugins"
 
-  # Install zsh-syntax-highlighting
   if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
     echo "Installing zsh-syntax-highlighting..."
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
@@ -62,6 +57,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 print_header "Verifying installation"
+
 if [ -f "$HOME/.gitconfig" ]; then
   echo -e "${GREEN}✓${NC} Verified .gitconfig is installed at $HOME/.gitconfig"
   ls -la "$HOME/.gitconfig"
