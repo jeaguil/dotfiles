@@ -3,6 +3,11 @@
 
 [ -f "$HOME/.profile" ] && source "$HOME/.profile"
 
+if [ -z "$ZSH_VERSION" ]; then
+  echo "Warning: This script is intended to be sourced in zsh, not another shell."
+  exit 1
+fi
+
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="refined"
 
