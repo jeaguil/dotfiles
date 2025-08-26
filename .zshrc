@@ -8,6 +8,12 @@ if [ -z "$ZSH_VERSION" ]; then
   exit 1
 fi
 
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Installing Oh My Zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  echo "Oh My Zsh installed"
+fi
+
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="refined"
 
@@ -53,6 +59,7 @@ if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]
   echo "Installing zsh-syntax-highlighting..."
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 fi
+source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 if command -v rbenv >/dev/null 2>&1; then
   eval "$(rbenv init -)"
