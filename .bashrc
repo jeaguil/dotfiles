@@ -72,6 +72,8 @@ HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoredups
 
 [ -f "$HOME/.git-prompt.sh" ] || { echo >&2 "Git prompt script not found. Downloading..."; curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh; }
+# shellcheck source=$HOME/.git-prompt.sh
+# shellcheck disable=SC1091
 . ~/.git-prompt.sh # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
 PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\u@\h:\w\[\033[31m\]${PS1_CMD1}\[\033[0m\] \n\$ '

@@ -18,10 +18,10 @@ setup_symlinks() {
   ln -sf "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
   echo -e "${GREEN}✓${NC} Created symlink for .gitconfig"
 
-  if [[ -n "$CODESPACES" && -f "/bin/zsh" ]] || [[ "$(uname)" == "Darwin" ]]; then
+  if [[ -n "$ZSH_VERSION" ]]; then
     ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
     echo -e "${GREEN}✓${NC} Created symlink for .zshrc"
-  elif [[ "$(uname)" == "Linux" ]]; then
+  elif [[ -n "$BASH_VERSION" ]]; then
     ln -sf "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
     echo -e "${GREEN}✓${NC} Created symlink for .bashrc"
   fi
@@ -34,7 +34,7 @@ print_header "Starting dotfiles installation"
 
 setup_symlinks
 
-if [[ -n "$CODESPACES" && -f "/bin/zsh" ]] || [[ "$(uname)" == "Darwin" ]]; then
+if [[ -n "$ZSH_VERSION" ]]; then
   print_header "Setting up Oh My Zsh"
 
   if [ ! -d "$HOME/.oh-my-zsh" ]; then

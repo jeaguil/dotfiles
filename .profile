@@ -16,7 +16,7 @@ elif command -v nano >/dev/null 2>&1; then
   export VISUAL="nano"
 fi
 
-if [ "$(uname)" = "Darwin" ]; then
+if [ -n "$ZSH_VERSION" ]; then
   [ -d "/opt/homebrew/bin" ] && export PATH="/opt/homebrew/bin:$PATH"
   [ -d "/usr/local/bin" ] && export PATH="/usr/local/bin:$PATH"
 fi
