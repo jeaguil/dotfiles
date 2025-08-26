@@ -4,13 +4,13 @@
 [github]
     user = jeaguil
 [alias]
-    ll = !. ~/.dotfiles/.githelpers && pretty_git_log
+    ll = !. "$HOME/.githelpers" && pretty_git_log
     la = !git ll --all
-    p-re = !. ~/.dotfiles/.githelpers && pull_remote
-    s-pr = !. ~/.dotfiles/.githelpers && switch_prefix
-    su = !. ~/.dotfiles/.githelpers && set_upstream
-    clb = !. ~/.dotfiles/.githelpers && clean_local_branches
-    bvv = !. ~/.dotfiles/.githelpers && color_verbose_branch
+    p-re = !. "$HOME/.githelpers" && pull_remote
+    s-pr = !. "$HOME/.githelpers" && switch_prefix
+    su = !. "$HOME/.githelpers" && set_upstream
+    clb = !. "$HOME/.githelpers" && clean_local_branches
+    bvv = !. "$HOME/.githelpers" && color_verbose_branch
 [core]
     pager = less -F -X
     editor = vim
