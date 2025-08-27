@@ -76,4 +76,5 @@ HISTCONTROL=ignoredups
 # shellcheck disable=SC1091
 . ~/.git-prompt.sh # https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
-PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'; PS1='\u@\h:\w\[\033[31m\]${PS1_CMD1}\[\033[0m\] \n\$ '
+PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'
+PS1='\u@\h:\[\033[34m\]\w\[\033[0m\]\n\[\033[31m\]${PS1_CMD1}\[\033[0m\]\n\$ '
