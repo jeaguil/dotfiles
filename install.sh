@@ -8,7 +8,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 print_header() {
-  printf "\n${YELLOW}==== %s ====${NC}\n" "$1"
+  printf "\n%b==== %s ====%b\n" "${YELLOW}" "$1" "${NC}"
 }
 
 setup_symlinks() {
@@ -16,20 +16,16 @@ setup_symlinks() {
 
   ln -sf "$DOTFILES_DIR/.githelpers" "$HOME/.githelpers"
   ln -sf "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
-  # shellcheck disable=SC2059
-  printf "${GREEN}✓${NC} Created symlink for .gitconfig\n"
+  printf "%b✓%b Created symlink for .gitconfig\n" "${GREEN}" "${NC}"
 
   ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-  # shellcheck disable=SC2059
-  printf "${GREEN}✓${NC} Created symlink for .zshrc\n"
+  printf "%b✓%b Created symlink for .zshrc\n" "${GREEN}" "${NC}"
 
   ln -sf "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
-  # shellcheck disable=SC2059
-  printf "${GREEN}✓${NC} Created symlink for .bashrc\n"
+  printf "%b✓%b Created symlink for .bashrc\n" "${GREEN}" "${NC}"
 
   ln -sf "$DOTFILES_DIR/.profile" "$HOME/.profile"
-  # shellcheck disable=SC2059
-  printf "${GREEN}✓${NC} Created symlink for .profile\n"
+  printf "%b✓%b Created symlink for .profile\n" "${GREEN}" "${NC}"
 }
 
 verify_symlink() {
@@ -39,19 +35,15 @@ verify_symlink() {
   if [ -L "$symlink" ]; then
     actual_target=$(readlink "$symlink")
     if [ "$actual_target" = "$target" ]; then
-      # shellcheck disable=SC2059
-      printf "${GREEN}✓${NC} Verified $symlink -> $target\n"
+      printf "%b✓%b Verified %s -> %s\n" "${GREEN}" "${NC}" "$symlink" "$target"
     else
-      # shellcheck disable=SC2059
-      printf "${RED}✗${NC} Invalid symlink: $symlink -> $actual_target (expected $target)\n"
+      printf "%b✗%b Invalid symlink: %s -> %s (expected %s)\n" "${RED}" "${NC}" "$symlink" "$actual_target" "$target"
     fi
   else
     if [ -e "$symlink" ]; then
-      # shellcheck disable=SC2059
-      printf "${RED}✗${NC} $symlink exists but is not a symlink\n"
+      printf "%b✗%b %s exists but is not a symlink\n" "${RED}" "${NC}" "$symlink"
     else
-      # shellcheck disable=SC2059
-      printf "${RED}✗${NC} $symlink does not exist\n"
+      printf "%b✗%b %s does not exist\n" "${RED}" "${NC}" "$symlink"
     fi
   fi
 }
@@ -60,16 +52,13 @@ install_tools() {
   print_header "Installing tools"
 
   if command -v copilot >/dev/null 2>&1; then
-    # shellcheck disable=SC2059
-    printf "${GREEN}✓${NC} GitHub Copilot CLI already installed\n"
+    printf "%b✓%b GitHub Copilot CLI already installed\n" "${GREEN}" "${NC}"
   else
     printf "Installing GitHub Copilot CLI...\n"
     if curl -fsSL https://gh.io/copilot-install | sudo bash; then
-      # shellcheck disable=SC2059
-      printf "${GREEN}✓${NC} GitHub Copilot CLI installed successfully\n"
+      printf "%b✓%b GitHub Copilot CLI installed successfully\n" "${GREEN}" "${NC}"
     else
-      # shellcheck disable=SC2059
-      printf "${RED}✗${NC} Failed to install GitHub Copilot CLI\n"
+      printf "%b✗%b Failed to install GitHub Copilot CLI\n" "${RED}" "${NC}"
     fi
   fi
 }
