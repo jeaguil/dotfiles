@@ -56,9 +56,29 @@ verify_symlink() {
   fi
 }
 
+install_tools() {
+  print_header "Installing tools"
+
+  if command -v copilot >/dev/null 2>&1; then
+    # shellcheck disable=SC2059
+    printf "${GREEN}✓${NC} GitHub Copilot CLI already installed\n"
+  else
+    printf "Installing GitHub Copilot CLI...\n"
+    if curl -fsSL https://gh.io/copilot-install | sudo bash; then
+      # shellcheck disable=SC2059
+      printf "${GREEN}✓${NC} GitHub Copilot CLI installed successfully\n"
+    else
+      # shellcheck disable=SC2059
+      printf "${RED}✗${NC} Failed to install GitHub Copilot CLI\n"
+    fi
+  fi
+}
+
 print_header "Starting dotfiles installation"
 
 setup_symlinks
+
+install_tools
 
 print_header "Verifying installation"
 
