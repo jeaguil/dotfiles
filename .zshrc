@@ -1,73 +1,44 @@
-# Path configuration
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
 [ -f "$HOME/.profile" ] && source "$HOME/.profile"
-
-if [ -z "$ZSH_VERSION" ]; then
-  echo "Warning: This script is intended to be sourced in zsh, not another shell."
-  exit 1
-fi
-
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  echo "Installing Oh My Zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  echo "Oh My Zsh installed"
-fi
+[ -f "$HOME/.exports.sh" ] && source "$HOME/.exports.sh"
+[ -f "$HOME/.aliases.sh" ] && source "$HOME/.aliases.sh"
 
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
+source "$ZSH/oh-my-zsh.sh"
 
-HISTSIZE=10000
-HISTFILESIZE=10000
-SAVEHIST=$HISTSIZE
-setopt HIST_IGNORE_ALL_DUPS  # Don't record duplicates
-setopt HIST_FIND_NO_DUPS     # Don't show duplicates when searching
-setopt HIST_IGNORE_SPACE     # Don't record commands starting with space
-setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries
-setopt SHARE_HISTORY         # Share history between terminals
+if [ -f "$HOME/.git-completion.zsh" ]; then
+  zstyle ':completion:*:*:git:*' script "$HOME/.git-completion.bash"
+  fpath=("$HOME" $fpath)
+  autoload -Uz compinit && compinit
+fi
 
-source $ZSH/oh-my-zsh.sh
+if [ -f "$HOME/.git-prompt.sh" ]; then
+  source "$HOME/.git-prompt.sh"
+  GIT_PS1_SHOWDIRTYSTATE=1
+  GIT_PS1_SHOWSTASHSTATE=1
+  GIT_PS1_SHOWUNTRACKEDFILES=1
+  GIT_PS1_SHOWUPSTREAM=auto
+fi
 
-autoload -Uz vcs_info
-precmd() { vcs_info }
-zstyle ':vcs_info:git:*' formats ' (%b)'
-zstyle ':vcs_info:*' enable git
-PROMPT='%n@%m:%~${vcs_info_msg_0_}
+setopt PROMPT_SUBST
+precmd() { PS1_GIT=$(__git_ps1 " (%s)" 2>/dev/null) }
+PROMPT='%n@%m:%~${PS1_GIT}
 $ '
 
-export EDITOR='vim'
-export VISUAL='vim'
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export TERM=xterm-256color
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
+setopt AUTO_CD
+setopt NO_BEEP
 
-hash -d dots=~/.dotfiles
-
-alias ip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\\  -f2"
-alias flush-dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
-alias top-cpu="top -o cpu"
-alias top-mem="top -o rsize"
-
-extract() {
-  if [ -f $1 ]; then
-    case $1 in
-      *.tar.gz)   tar xzf $1     ;;
-      *.tar)      tar xf $1      ;;
-      *.zip)      unzip $1       ;;
-      *.7z)       7z x $1        ;;
-      *)          echo "'$1' cannot be extracted via extract()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
-if [ ! -d "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
-  echo "Installing zsh-syntax-highlighting..."
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-fi
-source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 if command -v rbenv >/dev/null 2>&1; then
   eval "$(rbenv init -)"
 fi
+
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
