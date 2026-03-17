@@ -1,24 +1,6 @@
 # Path configuration
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-if [ ! -f "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/simple.zsh-theme" ]; then
-  mkdir -p "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes"
-  cat > "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/simple.zsh-theme" << 'EOF'
-autoload -Uz vcs_info
-precmd() { vcs_info }
-zstyle ':vcs_info:git:*' formats ' (%b)'
-zstyle ':vcs_info:*' enable git
-
-# Prompt structure:
-# username@hostname:directory
-# (git_branch)
-# $
-PROMPT='%n@%m:%~
-${vcs_info_msg_0_}
-$ '
-EOF
-fi
-
 [ -f "$HOME/.profile" ] && source "$HOME/.profile"
 
 if [ -z "$ZSH_VERSION" ]; then
@@ -33,7 +15,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
 fi
 
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="simple"
+ZSH_THEME=""
 
 HISTSIZE=10000
 HISTFILESIZE=10000
@@ -45,6 +27,13 @@ setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries
 setopt SHARE_HISTORY         # Share history between terminals
 
 source $ZSH/oh-my-zsh.sh
+
+autoload -Uz vcs_info
+precmd() { vcs_info }
+zstyle ':vcs_info:git:*' formats ' (%b)'
+zstyle ':vcs_info:*' enable git
+PROMPT='%n@%m:%~${vcs_info_msg_0_}
+$ '
 
 export EDITOR='vim'
 export VISUAL='vim'
