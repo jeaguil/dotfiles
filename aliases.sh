@@ -23,12 +23,20 @@ extract() {
   if [ -f "$1" ]; then
     case "$1" in
       *.tar.gz) tar xzf "$1" ;;
-      *.tar)    tar xf  "$1" ;;
+      *.tar)    tar xf  "$1" ;; 
       *.zip)    unzip   "$1" ;;
       *.7z)     7z x    "$1" ;;
       *)        echo "'$1' cannot be extracted via extract()" ;;
     esac
   else
     echo "'$1' is not a valid file"
+  fi
+}
+
+upgrade() {
+  if [ "$(uname)" = "Darwin" ]; then
+    brew update && brew upgrade && brew cleanup
+  else
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
   fi
 }
