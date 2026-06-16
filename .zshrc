@@ -5,13 +5,19 @@
 
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
-source "$ZSH/oh-my-zsh.sh"
 
-if [ -f "$HOME/.git-completion.zsh" ]; then
-  zstyle ':completion:*:*:git:*' script "$HOME/.git-completion.bash"
-  fpath=("$HOME" $fpath)
-  autoload -Uz compinit && compinit
-fi
+# Prefer zsh's own (rich) git completion, which has descriptions for every
+# subcommand and flag, over the minimal wrapper that Homebrew's git installs
+# into site-functions. zsh's native completions live alongside _complete, so
+# we locate that directory and put it first on fpath. This must run before
+# oh-my-zsh, which calls compinit and locks in completion definitions.
+() {
+  local -a nd
+  nd=(${^fpath}/_complete(N))
+  (( $#nd )) && fpath=("${nd[1]:h}" $fpath)
+}
+
+source "$ZSH/oh-my-zsh.sh"
 
 if [ -f "$HOME/.git-prompt.sh" ]; then
   source "$HOME/.git-prompt.sh"
