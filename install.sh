@@ -12,8 +12,6 @@ setup_symlinks() {
   ln -sf "$DOTFILES_DIR/.bashrc"     "$HOME/.bashrc"
   ln -sf "$DOTFILES_DIR/exports.sh"   "$HOME/.exports.sh"
   ln -sf "$DOTFILES_DIR/aliases.sh"   "$HOME/.aliases.sh"
-  mkdir -p "$HOME/.config/fish"
-  ln -sf "$DOTFILES_DIR/config.fish" "$HOME/.config/fish/config.fish"
 }
 
 install_omz() {
@@ -42,15 +40,6 @@ install_git_prompt() {
   fi
 }
 
-install_fish() {
-  if have fish; then return; fi
-  if [ "$(uname)" = "Darwin" ]; then
-    have brew && brew install fish
-  else
-    have apt-get && sudo apt-get install -y fish
-  fi
-}
-
 install_copilot() {
   if ! have copilot; then
     curl -fsSL https://gh.io/copilot-install | sudo bash
@@ -60,5 +49,4 @@ install_copilot() {
 setup_symlinks
 install_omz
 install_git_prompt
-install_fish
 install_copilot
