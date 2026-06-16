@@ -5,6 +5,8 @@ case $- in
     *) return ;;
 esac
 
+# Shared config: .exports.sh (env vars) and .aliases.sh (aliases/functions)
+# are sourced by both bash and zsh. PATH is set in .profile.
 [ -f "$HOME/.exports.sh" ] && . "$HOME/.exports.sh"
 [ -f "$HOME/.aliases.sh" ] && . "$HOME/.aliases.sh"
 

@@ -1,3 +1,4 @@
+# Load PATH (.profile) then shared env/aliases used by both bash and zsh.
 [ -f "$HOME/.profile" ] && source "$HOME/.profile"
 [ -f "$HOME/.exports.sh" ] && source "$HOME/.exports.sh"
 [ -f "$HOME/.aliases.sh" ] && source "$HOME/.aliases.sh"
