@@ -34,19 +34,8 @@ install_git_prompt() {
     curl -fsSL -o "$HOME/.git-completion.bash" \
       https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
   fi
-  if [ ! -f "$HOME/.git-completion.zsh" ]; then
-    curl -fsSL -o "$HOME/.git-completion.zsh" \
-      https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
-  fi
-}
-
-install_copilot() {
-  if ! have copilot; then
-    curl -fsSL https://gh.io/copilot-install | sudo bash
-  fi
 }
 
 setup_symlinks
 install_omz
 install_git_prompt
-install_copilot
