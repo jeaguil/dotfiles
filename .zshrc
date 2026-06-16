@@ -42,7 +42,8 @@ setopt SHARE_HISTORY
 setopt AUTO_CD
 setopt NO_BEEP
 
-source "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+ZSH_SYNTAX_HIGHLIGHTING="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[ -f "$ZSH_SYNTAX_HIGHLIGHTING" ] && source "$ZSH_SYNTAX_HIGHLIGHTING"
 
 if command -v rbenv >/dev/null 2>&1; then
   eval "$(rbenv init -)"
