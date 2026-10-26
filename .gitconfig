@@ -20,8 +20,26 @@
     log = false
 [push]
     default = current
+    autoSetupRemote = true
+[pull]
+    ff = only
+[fetch]
+    prune = true
+[rebase]
+    autoStash = true
+[rerere]
+    enabled = true
+[merge]
+    conflictStyle = zdiff3
+[diff]
+    algorithm = histogram
+[init]
+    defaultBranch = main
 [color]
     diff = auto
     status = auto
     branch = auto
     ui = true
+# This is last so machine-specific settings override the above.
+[include]
+    path = ~/.gitconfig.local
