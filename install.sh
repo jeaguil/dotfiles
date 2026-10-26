@@ -14,6 +14,18 @@ setup_symlinks() {
   ln -sf "$DOTFILES_DIR/aliases.sh"   "$HOME/.aliases.sh"
 }
 
+link_skills() {
+  skills_repo="${SKILLS_REPO:-$(dirname "$DOTFILES_DIR")/skills}"
+  if [ -d "$skills_repo" ] && { [ ! -e "$HOME/skills" ] || [ -L "$HOME/skills" ]; }; then
+    ln -sfn "$skills_repo" "$HOME/skills"
+  fi
+  [ -d "$HOME/skills" ] || return 0
+  target="$HOME/.copilot/skills"
+  if [ -d "$target" ] && [ ! -L "$target" ]; then return 0; fi
+  mkdir -p "$HOME/.copilot"
+  ln -sfn "$HOME/skills" "$target"
+}
+
 install_omz() {
   if ! have zsh; then return; fi
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -37,5 +49,6 @@ install_git_prompt() {
 }
 
 setup_symlinks
+link_skills
 install_omz
 install_git_prompt
