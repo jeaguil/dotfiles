@@ -24,7 +24,7 @@ pull_remote() {
     return 1
   fi
 
-  if git rev-parse --quiet --verify "$1"; then
+  if git rev-parse --quiet --verify "$1" >/dev/null; then
     echo "Local branch $1 already exists.";
   else
     git fetch origin "$1" && git checkout -b "$1" --track origin/"$1";
@@ -54,7 +54,7 @@ set_upstream() {
     branch="$1"
   fi
 
-  if git rev-parse --quiet --verify "origin/$branch"; then
+  if git rev-parse --quiet --verify "origin/$branch" >/dev/null; then
     git branch --set-upstream-to=origin/"$branch" "$branch";
   else
     echo "Remote branch origin/$branch does not exist.";
@@ -70,20 +70,28 @@ clean_local_branches() {
     set_upstream "$branch"
   done
 
-  local current_branch
+  local current_branch protected gone no_upstream
   current_branch=$(git rev-parse --abbrev-ref HEAD)
+  protected="^(master|main|$current_branch)$"
 
-  {
-    # Branches without upstream
-    git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads |
-      awk '$2 == "" { print $1 }'
+  gone=$(git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads |
+    awk '$2 == "[gone]" { print $1 }' | grep -v -E "$protected")
+  no_upstream=$(git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads |
+    awk '$2 == "" { print $1 }' | grep -v -E "$protected")
 
-    # Branches whose upstream is gone
-    git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads |
-      awk '$2 == "[gone]" { print $1 }'
-  } | grep -v -E "^(master|main|$current_branch)$" | while read -r branch; do
+  if [ -z "$gone$no_upstream" ]; then
+    echo "No branches to delete."
+    return
+  fi
+
+  for branch in $gone; do
     git branch -D "$branch"
-  done || echo "No branches to delete."
+  done
+
+  # -d refuses unmerged branches, so never-pushed work is kept
+  for branch in $no_upstream; do
+    git branch -d "$branch" 2>/dev/null || echo "Kept unmerged branch $branch"
+  done
 }
 
 color_verbose_branch() {
