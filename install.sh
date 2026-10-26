@@ -8,7 +8,9 @@ have() { command -v "$1" >/dev/null 2>&1; }
 
 link_file() {
   # A real file in the way is pulled into the repo; review it with git diff.
-  if [ -e "$2" ] && [ ! -L "$2" ]; then mv -f "$2" "$1"; fi
+  if [ -e "$2" ] && [ ! -L "$2" ]; then
+    if [ -n "${CODESPACES:-}" ]; then rm -f "$2"; else mv -f "$2" "$1"; fi
+  fi
   ln -sf "$1" "$2"
 }
 
@@ -20,6 +22,14 @@ setup_symlinks() {
   link_file "$DOTFILES_DIR/.bashrc"     "$HOME/.bashrc"
   link_file "$DOTFILES_DIR/exports.sh"  "$HOME/.exports.sh"
   link_file "$DOTFILES_DIR/aliases.sh"  "$HOME/.aliases.sh"
+}
+
+clone_skills() {
+  [ -n "${CODESPACES:-}" ] && [ -n "${SKILLS_TOKEN:-}" ] && have gh || return 0
+  skills_repo="${SKILLS_REPO:-$(dirname "$DOTFILES_DIR")/skills}"
+  [ -d "$skills_repo" ] && return 0
+  GH_TOKEN="$SKILLS_TOKEN" gh repo clone jeaguil/skills "$skills_repo" -- --quiet ||
+    echo "Failed to clone jeaguil/skills; check the SKILLS_TOKEN secret" >&2
 }
 
 link_skills() {
@@ -57,6 +67,7 @@ install_git_prompt() {
 }
 
 setup_symlinks
+clone_skills
 link_skills
 install_omz
 install_git_prompt
