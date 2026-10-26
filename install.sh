@@ -1,17 +1,25 @@
 #!/usr/bin/env sh
 
+set -eu
+
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+link_file() {
+  # A real file in the way is pulled into the repo; review it with git diff.
+  if [ -e "$2" ] && [ ! -L "$2" ]; then mv -f "$2" "$1"; fi
+  ln -sf "$1" "$2"
+}
+
 setup_symlinks() {
-  ln -sf "$DOTFILES_DIR/.githelpers" "$HOME/.githelpers"
-  ln -sf "$DOTFILES_DIR/.gitconfig"  "$HOME/.gitconfig"
-  ln -sf "$DOTFILES_DIR/.profile"    "$HOME/.profile"
-  ln -sf "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
-  ln -sf "$DOTFILES_DIR/.bashrc"     "$HOME/.bashrc"
-  ln -sf "$DOTFILES_DIR/exports.sh"   "$HOME/.exports.sh"
-  ln -sf "$DOTFILES_DIR/aliases.sh"   "$HOME/.aliases.sh"
+  link_file "$DOTFILES_DIR/.githelpers" "$HOME/.githelpers"
+  link_file "$DOTFILES_DIR/.gitconfig"  "$HOME/.gitconfig"
+  link_file "$DOTFILES_DIR/.profile"    "$HOME/.profile"
+  link_file "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
+  link_file "$DOTFILES_DIR/.bashrc"     "$HOME/.bashrc"
+  link_file "$DOTFILES_DIR/exports.sh"  "$HOME/.exports.sh"
+  link_file "$DOTFILES_DIR/aliases.sh"  "$HOME/.aliases.sh"
 }
 
 link_skills() {
@@ -29,7 +37,7 @@ link_skills() {
 install_omz() {
   if ! have zsh; then return; fi
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   fi
   ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
   if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
@@ -38,13 +46,13 @@ install_omz() {
 }
 
 install_git_prompt() {
+  git_tag="v$(git --version | sed -E 's/^git version ([0-9]+\.[0-9]+\.[0-9]+).*/\1/')"
+  base_url="https://raw.githubusercontent.com/git/git/$git_tag/contrib/completion"
   if [ ! -f "$HOME/.git-prompt.sh" ]; then
-    curl -fsSL -o "$HOME/.git-prompt.sh" \
-      https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+    curl -fsSL -o "$HOME/.git-prompt.sh" "$base_url/git-prompt.sh"
   fi
   if [ ! -f "$HOME/.git-completion.bash" ]; then
-    curl -fsSL -o "$HOME/.git-completion.bash" \
-      https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+    curl -fsSL -o "$HOME/.git-completion.bash" "$base_url/git-completion.bash"
   fi
 }
 
