@@ -30,10 +30,6 @@ fi
 
 if [ -f "$HOME/.git-prompt.sh" ]; then
   . "$HOME/.git-prompt.sh"
-  GIT_PS1_SHOWDIRTYSTATE=1
-  GIT_PS1_SHOWSTASHSTATE=1
-  GIT_PS1_SHOWUNTRACKEDFILES=1
-  GIT_PS1_SHOWUPSTREAM=auto
   PROMPT_COMMAND='PS1_CMD1=$(__git_ps1 " (%s)")'
   PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]${PS1_CMD1}\n\$ '
 else
@@ -41,7 +37,7 @@ else
 fi
 
 if command -v rbenv >/dev/null 2>&1; then
-  eval "$(rbenv init -)"
+  eval "$(rbenv init - --no-rehash bash)"
 fi
 
 [ -f "$HOME/.bashrc.local" ] && . "$HOME/.bashrc.local"

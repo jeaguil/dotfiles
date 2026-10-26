@@ -19,17 +19,11 @@ ZSH_THEME=""
 
 source "$ZSH/oh-my-zsh.sh"
 
-if [ -f "$HOME/.git-prompt.sh" ]; then
-  source "$HOME/.git-prompt.sh"
-  GIT_PS1_SHOWDIRTYSTATE=1
-  GIT_PS1_SHOWSTASHSTATE=1
-  GIT_PS1_SHOWUNTRACKEDFILES=1
-  GIT_PS1_SHOWUPSTREAM=auto
-fi
+[ -f "$HOME/.git-prompt.sh" ] && source "$HOME/.git-prompt.sh"
 
 setopt PROMPT_SUBST
 precmd() { PS1_GIT=$(__git_ps1 " (%s)" 2>/dev/null) }
-PROMPT='%n@%m:%~${PS1_GIT}
+PROMPT='%B%F{green}%n@%m%f%b:%B%F{blue}%~%f%b${PS1_GIT}
 $ '
 
 HISTSIZE=10000
@@ -46,7 +40,7 @@ ZSH_SYNTAX_HIGHLIGHTING="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-synt
 [ -f "$ZSH_SYNTAX_HIGHLIGHTING" ] && source "$ZSH_SYNTAX_HIGHLIGHTING"
 
 if command -v rbenv >/dev/null 2>&1; then
-  eval "$(rbenv init -)"
+  eval "$(rbenv init - --no-rehash zsh)"
 fi
 
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"

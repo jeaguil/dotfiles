@@ -13,7 +13,11 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 if [ -x /usr/bin/dircolors ]; then
-  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  if [ -r ~/.dircolors ]; then
+    eval "$(dircolors -b ~/.dircolors)"
+  else
+    eval "$(dircolors -b)"
+  fi
   alias ls='ls --color=auto'
   alias fgrep='fgrep --color=auto'
   alias egrep='egrep --color=auto'
@@ -22,11 +26,15 @@ fi
 extract() {
   if [ -f "$1" ]; then
     case "$1" in
-      *.tar.gz) tar xzf "$1" ;;
-      *.tar)    tar xf  "$1" ;; 
-      *.zip)    unzip   "$1" ;;
-      *.7z)     7z x    "$1" ;;
-      *)        echo "'$1' cannot be extracted via extract()" ;;
+      *.tar.gz|*.tgz)   tar xzf "$1" ;;
+      *.tar.bz2|*.tbz2) tar xjf "$1" ;;
+      *.tar.xz|*.txz)   tar xJf "$1" ;;
+      *.tar)            tar xf  "$1" ;;
+      *.gz)             gunzip  "$1" ;;
+      *.bz2)            bunzip2 "$1" ;;
+      *.zip)            unzip   "$1" ;;
+      *.7z)             7z x    "$1" ;;
+      *)                echo "'$1' cannot be extracted via extract()" ;;
     esac
   else
     echo "'$1' is not a valid file"
