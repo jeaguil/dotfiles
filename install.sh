@@ -25,11 +25,20 @@ setup_symlinks() {
 }
 
 clone_skills() {
-  [ -n "${CODESPACES:-}" ] && [ -n "${SKILLS_TOKEN:-}" ] && have gh || return 0
   skills_repo="${SKILLS_REPO:-$(dirname "$DOTFILES_DIR")/skills}"
   [ -d "$skills_repo" ] && return 0
-  GH_TOKEN="$SKILLS_TOKEN" gh repo clone jeaguil/skills "$skills_repo" -- --quiet ||
-    echo "Failed to clone jeaguil/skills; check the SKILLS_TOKEN secret" >&2
+  if [ -n "${CODESPACES:-}" ]; then
+    [ -n "${SKILLS_TOKEN:-}" ] && have gh || return 0
+    GH_TOKEN="$SKILLS_TOKEN" gh repo clone jeaguil/skills "$skills_repo" -- --quiet ||
+      echo "Failed to clone jeaguil/skills; check the SKILLS_TOKEN secret" >&2
+  elif have gh && gh auth status >/dev/null 2>&1; then
+    gh repo clone jeaguil/skills "$skills_repo" -- --quiet ||
+      echo "Failed to clone jeaguil/skills with gh" >&2
+  else
+    # Fail fast instead of prompting when no SSH key or forwarded agent can reach GitHub.
+    GIT_SSH_COMMAND="ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new" \
+      git clone --quiet git@github.com:jeaguil/skills.git "$skills_repo" 2>/dev/null || true
+  fi
 }
 
 link_skills() {
