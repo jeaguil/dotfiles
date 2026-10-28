@@ -24,6 +24,13 @@ setup_symlinks() {
   link_file "$DOTFILES_DIR/aliases.sh"  "$HOME/.aliases.sh"
 }
 
+setup_git_auth() {
+  [ "$(uname)" = "Linux" ] && [ -z "${CODESPACES:-}" ] && have ssh || return 0
+  ssh -T -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=accept-new git@github.com 2>&1 |
+    grep -q "successfully authenticated" || return 0
+  git config --file "$HOME/.gitconfig.local" url."git@github.com:".insteadOf "https://github.com/"
+}
+
 clone_skills() {
   skills_repo="${SKILLS_REPO:-$(dirname "$DOTFILES_DIR")/skills}"
   [ -d "$skills_repo" ] && return 0
@@ -76,6 +83,7 @@ install_git_prompt() {
 }
 
 setup_symlinks
+setup_git_auth
 clone_skills
 link_skills
 install_omz
