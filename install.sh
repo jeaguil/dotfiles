@@ -7,9 +7,9 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 have() { command -v "$1" >/dev/null 2>&1; }
 
 link_file() {
-  # A real file in the way is pulled into the repo; review it with git diff.
+  # A real file in the way is pulled into the repo for git diff review; unattended runs keep the repo version.
   if [ -e "$2" ] && [ ! -L "$2" ]; then
-    if [ -n "${CODESPACES:-}" ]; then rm -f "$2"; else mv -f "$2" "$1"; fi
+    if [ -n "${CODESPACES:-}" ] || [ ! -t 0 ]; then rm -f "$2"; else mv -f "$2" "$1"; fi
   fi
   ln -sf "$1" "$2"
 }
@@ -34,10 +34,11 @@ setup_git_auth() {
 clone_skills() {
   skills_repo="${SKILLS_REPO:-$(dirname "$DOTFILES_DIR")/skills}"
   [ -d "$skills_repo" ] && return 0
-  if [ -n "${CODESPACES:-}" ]; then
-    [ -n "${SKILLS_TOKEN:-}" ] && have gh || return 0
+  if [ -n "${SKILLS_TOKEN:-}" ] && have gh; then
     GH_TOKEN="$SKILLS_TOKEN" gh repo clone jeaguil/skills "$skills_repo" -- --quiet ||
-      echo "Failed to clone jeaguil/skills; check the SKILLS_TOKEN secret" >&2
+      echo "Failed to clone jeaguil/skills; check SKILLS_TOKEN" >&2
+  elif [ -n "${CODESPACES:-}" ]; then
+    return 0
   elif have gh && gh auth status >/dev/null 2>&1; then
     gh repo clone jeaguil/skills "$skills_repo" -- --quiet ||
       echo "Failed to clone jeaguil/skills with gh" >&2
@@ -81,6 +82,14 @@ install_git_prompt() {
     curl -fsSL -o "$HOME/.git-completion.bash" "$base_url/git-completion.bash"
   fi
 }
+
+# Steps that need the user's GitHub access; .profile reruns these on the first SSH login.
+if [ "${1:-}" = "--login" ]; then
+  setup_git_auth
+  clone_skills
+  link_skills
+  exit 0
+fi
 
 setup_symlinks
 setup_git_auth

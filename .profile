@@ -22,4 +22,14 @@ if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
   . "$HOME/.bashrc"
 fi
 
+# Provisioning can't reach GitHub; finish setup on the first interactive login with a forwarded agent.
+case $- in *i*)
+  if [ -n "${SSH_AUTH_SOCK:-}" ] && [ -z "${CODESPACES:-}" ] && [ "$(uname)" = Linux ] &&
+    { [ ! -e "$HOME/.copilot/skills" ] || ! grep -qs 'git@github.com:' "$HOME/.gitconfig.local"; }; then
+    dotfiles_dir=$(dirname "$(readlink "$HOME/.profile")")
+    [ -x "$dotfiles_dir/install.sh" ] && "$dotfiles_dir/install.sh" --login >/dev/null
+    unset dotfiles_dir
+  fi
+;; esac
+
 [ -f "$HOME/.profile.local" ] && . "$HOME/.profile.local"
