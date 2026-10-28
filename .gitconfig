@@ -35,6 +35,8 @@
     algorithm = histogram
 [init]
     defaultBranch = main
+[credential "https://github.com"]
+    helper = !command -v gh >/dev/null 2>&1 && gh auth git-credential
 [color]
     diff = auto
     status = auto
